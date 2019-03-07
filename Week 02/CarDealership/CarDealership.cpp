@@ -2,8 +2,9 @@
 #include <cstring>
 using namespace std;
 
-struct Car
+class Car
 {
+private:
     char brand[101];
     char model[101];
     unsigned int maxSpeed;
@@ -11,10 +12,105 @@ struct Car
     bool used;
     unsigned int mileage;
     double price;
+
+public:
+    Car(const char* nBrand = "VW", const char* nModel = "Golf 4", unsigned int nMaxSpeed = 100,
+        unsigned int nHp = 100, bool nUsed = true, unsigned int nMileage = 100000, double nPrice = 7432.5)
+    {
+        strcpy(brand, nBrand);
+        strcpy(model, nModel);
+        maxSpeed = nMaxSpeed;
+        hp = nHp;
+        used = nUsed;
+        mileage = nMileage;
+        price = nPrice;
+    }
+
+    ///getters
+
+    const char* getBrand()
+    {
+        return brand;
+    }
+
+    const char* getModel()
+    {
+        return model;
+    }
+
+    unsigned int getMaxSpeed()
+    {
+        return maxSpeed;
+    }
+
+    unsigned int getHp()
+    {
+        return hp;
+    }
+
+    bool isUsed()
+    {
+        return used;
+    }
+
+    unsigned int getMileage()
+    {
+        return mileage;
+    }
+
+    double getPrice()
+    {
+        return price;
+    }
+
+    ///setters
+
+    void setBrand(const char* nBrand)
+    {
+        strcpy(brand, nBrand);
+    }
+
+    void setModel(const char* nModel)
+    {
+        strcpy(model,nModel);
+    }
+
+    void setMaxSpeed(unsigned int nMaxSpeed)
+    {
+        if(nMaxSpeed > 0){
+            maxSpeed = nMaxSpeed;
+        }
+    }
+
+    void setHp(unsigned int nHp)
+    {
+        if(nHp > 0){
+            hp = nHp;
+        }
+    }
+
+    void setUsed(bool nUsed)
+    {
+        used = nUsed;
+    }
+
+    void setMileage(unsigned int nMileage)
+    {
+        if(nMileage > 0){
+            mileage = nMileage;
+        }
+    }
+
+    void setPrice(double nPrice){
+        if(nPrice > 0){
+            price = nPrice;
+        }
+    }
 };
 
-struct CarDealership
+class CarDealership
 {
+public:
     char address[101];
     Car cars[1000];
     int numberOfCars;
@@ -24,7 +120,7 @@ struct CarDealership
         int idx = 0;
         for (int i = 1; i < numberOfCars; i++)
         {
-            if (cars[i].price > cars[idx].price)
+            if (cars[i].getPrice() > cars[idx].getPrice())
             {
                 idx = i;
             }
@@ -34,7 +130,7 @@ struct CarDealership
         return cars[idx];
     }
 
-    char* const getMostExpensiveBrand()
+    const char* const getMostExpensiveBrand()
     {
         double maxAveragePriceOfBrand = 0.0;
         int idxOfCarWithWantedBrand = -1;
@@ -44,9 +140,9 @@ struct CarDealership
             int numberOfCarsOfThisBrand = 0;
             for (int j = 0; j < numberOfCars; j++)
             {
-                if (!strcmp(cars[i].brand, cars[j].brand))
+                if (!strcmp(cars[i].getBrand(), cars[j].getBrand()))
                 {
-                    price += cars[j].price;
+                    price += cars[j].getPrice();
                     numberOfCarsOfThisBrand++;
                 }
             }
@@ -59,7 +155,7 @@ struct CarDealership
             }
         }
 
-        return cars[idxOfCarWithWantedBrand].brand;
+        return cars[idxOfCarWithWantedBrand].getBrand();
     }
 
 };
@@ -69,17 +165,17 @@ int main()
     Car c[10];
     int N = 3;
 
-    strcpy(c[0].brand, "Mercedes");
-    c[0].price = 100000.123;
-    c[0].hp = 120;
+    c[0].setBrand("Mercedes");
+    c[0].setPrice(100000.123);
+    c[0].setHp(120);
 
-    strcpy(c[1].brand, "BMW");
-    c[1].price = 90132.222;
-    c[1].hp = 170;
+    c[1].setBrand("BMW");
+    c[1].setPrice(90132.222);
+    c[1].setHp(170);
 
-    strcpy(c[2].brand, "Porsche");
-    c[2].price = 300000.321;
-    c[2].hp = 300;
+    c[2].setBrand("Porsche");
+    c[2].setPrice(300000.321);
+    c[2].setHp(300);
 
     CarDealership carDealership;
     strcpy(carDealership.address, "Some Street, 123");
@@ -91,10 +187,10 @@ int main()
 
     Car& mostExpensiveCar = carDealership.getMostExpensiveCar();
     cout << &mostExpensiveCar << endl; /// note that this address is the same a the one printed in the function: getMostExpensiveCar()
-                                       /// So, what does it mean that? -> The returned Car object is not copied
-    cout << mostExpensiveCar.brand << endl;
+    /// So, what does it mean that? -> The returned Car object is not copied
+    cout << mostExpensiveCar.getBrand() << endl;
 
-    char* const mostExpensiveBrand = carDealership.getMostExpensiveBrand();
+    const char* const mostExpensiveBrand = carDealership.getMostExpensiveBrand();
     cout << mostExpensiveBrand << endl;
 
     return 0;
