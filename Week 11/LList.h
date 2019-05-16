@@ -10,23 +10,22 @@ using namespace std;
 template <typename T = int>
 struct elem_link1
 {
-    T inf;			 // информационна част
-    elem_link1<T>* link; 	 // адресна част
+    T inf;
+    elem_link1<T>* link;
 };
 
 template <typename T = int>
 class LList
 {
 public:
-    // канонично представяне
     LList();
     ~LList();
     LList(const LList&);
     LList& operator=(const LList&);
-    // основни функции
     bool empty() const;
     void iterStart(elem_link1<T>* = NULL);
     elem_link1<T>* iter();
+    T& getFirst();
     void toEnd(const T&);
     void insertAfter(elem_link1<T>*, const T&);
     void insertBefore(elem_link1<T>*, const T&);
@@ -37,10 +36,9 @@ public:
     int length() const;
     void concat(const LList&);
 private:
-    elem_link1<T> *start, 	   // указател към началото
-               *end, 	   // указател към края
-               *current;  // указател към текущ елемент
-    // помощни функции
+    elem_link1<T> *start,
+               *end,
+               *current;
     void copyList(const LList&);
     void deleteList();
 };
@@ -68,6 +66,12 @@ LList<T>& LList<T>::operator=(const LList<T>& r)
         copyList(r);
     }
     return *this;
+}
+
+template <typename T>
+T& getFirst()
+{
+    return start->inf;
 }
 
 template <typename T>
