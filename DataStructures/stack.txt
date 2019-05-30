@@ -1,0 +1,157 @@
+#include <iostream>
+#include <cassert>
+
+using namespace std;
+
+template <typename T>
+struct elem
+{
+    T inf;
+    elem* link;  // elem<T>* link;
+};
+
+
+template <typename T>
+class stack
+{
+public:
+    stack();
+    ~stack();
+    stack(const stack&);
+    stack& operator=(const stack&);
+    void push(const T&);
+    void pop(T&);
+    bool empty() const;
+    void print();
+    int length();
+private:
+    elem<T> *start;             // указател
+    void delstack();
+    void copystack(const stack&);
+};
+
+template <typename T>
+stack<T>::stack()
+{
+    start = NULL;
+}
+
+template <typename T>
+stack<T>::~stack()
+{
+    delstack();
+}
+
+template <typename T>
+stack<T>::stack(const stack<T>& r)
+{
+    copystack(r);
+}
+
+template <typename T>
+stack<T>& stack<T>::operator=(const stack<T>& r)
+{
+    if (this != &r)
+    {
+        delstack();
+        copystack(r);
+    }
+    return *this;
+}
+
+template <typename T>
+void stack<T>::delstack()
+{
+    elem<T> *p;
+    while (start)
+    {
+        p = start;
+        start = start->link;
+        delete p;
+    }
+}
+
+template <typename T>
+void stack<T>::copystack(const stack<T>& r)
+{
+    if (r.start)
+    {
+        elem<T> *p = r.start, *q = NULL, *s = NULL;
+        start = new elem<T>;
+        assert(start != NULL);
+        start->inf = p->inf;
+        start->link = q;
+        q = start;
+        p = p->link;
+        while (p)
+        {
+            s = new elem<T>;
+            assert(s != NULL);
+            s->inf = p->inf;
+            q->link = s;
+            q = s;
+            p = p->link;
+        }
+        q->link = NULL;
+    }
+    else
+        start = NULL;
+}
+
+template <typename T>
+void stack<T>::push(const T& x)
+{
+    elem<T> *p = start;
+    start = new elem<T>;
+    assert(start != NULL);
+    start->inf = x;
+    start->link = p;
+}
+
+template <typename T>
+void stack<T>::pop(T& x)
+{
+    if (start)
+    {
+        x = start->inf;
+        elem<T> *p = start;
+        start = start->link;
+        delete p;
+    }
+    else
+    {
+        cout << "The stack is empty.\n";
+        exit(1);
+    }
+}
+
+template <typename T>
+bool stack<T>::empty() const
+{
+    return start == NULL;
+}
+
+template <typename T>
+void stack<T>::print()
+{
+    T x;
+    while (!empty())
+    {
+        pop(x);
+        cout << x << " ";    // !!!!! Ако за елементите на T е дефиниран <<
+    }
+    cout << endl;
+}
+
+template <typename T>
+int stack<T>::length()
+{
+    int n = 0;
+    T x;
+    while (!empty())
+    {
+        pop(x);
+        n++;
+    }
+    return n;
+}
